@@ -2,6 +2,7 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/souvikmaji/vbm)](https://goreportcard.com/report/github.com/souvikmaji/vbm)
 [![wercker status](https://app.wercker.com/status/e7cb67d27848f4a08dd86543a1c3b8bf/s/master "wercker status")](https://app.wercker.com/project/byKey/e7cb67d27848f4a08dd86543a1c3b8bf)
+![Codecov](https://img.shields.io/codecov/c/github/souvikmaji/vbm.svg?style=popout-square)
 [![GoDoc](https://godoc.org/github.com/souvikmaji/vbm?status.svg)](https://godoc.org/github.com/souvikmaji/vbm)
 [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
