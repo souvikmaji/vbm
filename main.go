@@ -14,6 +14,9 @@ func main() {
 		os.Exit(-1)
 	}
 
-	m := NewMachine(string(code), os.Stdin, os.Stdout)
+	compiler := NewCompiler(string(code))
+	instructions := compiler.Compile()
+
+	m := NewMachine(instructions, os.Stdin, os.Stdout)
 	m.Execute()
 }
