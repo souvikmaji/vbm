@@ -1,6 +1,9 @@
 package main
 
-import "io"
+import (
+	"errors"
+	"io"
+)
 
 // Machine is the virtual brainfuck machine
 type Machine struct {
@@ -27,7 +30,7 @@ func NewMachine(instructions []*Instruction, in io.Reader, out io.Writer) *Machi
 }
 
 // Execute starts the machine and and executes the intermediate representation
-func (m *Machine) Execute() {
+func (m *Machine) Execute() error {
 	for m.ip < len(m.code) {
 		ins := m.code[m.ip]
 
@@ -42,11 +45,15 @@ func (m *Machine) Execute() {
 			m.dp -= ins.Argument
 		case ReadChar:
 			for i := 0; i < ins.Argument; i++ {
-				m.readChar()
+				if err := m.readChar(); err != nil {
+					return err
+				}
 			}
 		case PutChar:
 			for i := 0; i < ins.Argument; i++ {
-				m.putChar()
+				if err := m.putChar(); err != nil {
+					return err
+				}
 			}
 		case JumpIfZero:
 			if m.memory[m.dp] == 0 {
@@ -62,30 +69,35 @@ func (m *Machine) Execute() {
 
 		m.ip++
 	}
+
+	return nil
 }
 
 // reads a character from input
-func (m *Machine) readChar() {
+func (m *Machine) readChar() error {
 	n, err := m.input.Read(m.readBuf)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	if n != 1 {
-		panic("wrong num bytes read")
+		return errors.New("wrong num bytes read")
 	}
 
 	m.memory[m.dp] = int(m.readBuf[0])
+	return nil
 }
 
 // writes a character to output
-func (m *Machine) putChar() {
+func (m *Machine) putChar() error {
 	m.readBuf[0] = byte(m.memory[m.dp])
 
 	n, err := m.output.Write(m.readBuf)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	if n != 1 {
-		panic("wrong num bytes written")
+		return errors.New("wrong num bytes written")
 	}
+
+	return nil
 }
