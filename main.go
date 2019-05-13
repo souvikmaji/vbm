@@ -16,22 +16,21 @@ func main() {
 		handleError(errors.New("no filename given"))
 	}
 
-	fileName := os.Args[1]
+	fileName := args[0]
 	code, err := ioutil.ReadFile(fileName)
-	if err != nil {
-		handleError(err)
-	}
+	handleError(err)
 
 	compiler := NewCompiler(string(code))
 	instructions := compiler.Compile()
 
 	m := NewMachine(instructions, os.Stdin, os.Stdout)
-	if err := m.Execute(); err != nil {
-		handleError(err)
-	}
+	err = m.Execute()
+	handleError(err)
 }
 
 func handleError(err error) {
-	fmt.Fprintf(os.Stderr, "error: %s\n", err)
-	os.Exit(-1)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %s\n", err)
+		os.Exit(-1)
+	}
 }
