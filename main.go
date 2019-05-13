@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 )
@@ -13,15 +14,15 @@ func main() {
 	code, err := ioutil.ReadFile(fileName)
 	handleError(err)
 
-	err = compile(string(code))
+	err = compile(string(code), os.Stdin, os.Stdout)
 	handleError(err)
 }
 
-func compile(code string) error {
+func compile(code string, input io.Reader, output io.Writer) error {
 	compiler := NewCompiler(code)
 	instructions := compiler.Compile()
 
-	m := NewMachine(instructions, os.Stdin, os.Stdout)
+	m := NewMachine(instructions, input, output)
 	return m.Execute()
 }
 

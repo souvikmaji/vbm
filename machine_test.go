@@ -122,22 +122,3 @@ func TestPutChar(t *testing.T) {
 	}
 
 }
-
-const HelloWorld = `++++++++[>++++[>++>+++>+++>+<<<<-]>+> +>->>+[<]<-]>>.>---.+++++++ ..+ ++.>>.<-.<.+++.------.--------.>>+.>++.`
-
-func TestHelloWorld(t *testing.T) {
-	in := bytes.NewBufferString("")
-	out := new(bytes.Buffer)
-
-	compiler := NewCompiler(HelloWorld)
-	instructions := compiler.Compile()
-
-	m := NewMachine(instructions, in, out)
-
-	m.Execute()
-
-	output := out.String()
-	if output != "Hello World!\n" {
-		t.Errorf("output wrong. got=%q", output)
-	}
-}
