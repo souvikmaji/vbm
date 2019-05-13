@@ -9,6 +9,23 @@ import (
 )
 
 func main() {
+	fileName := getFileName()
+	code, err := ioutil.ReadFile(fileName)
+	handleError(err)
+
+	err = compile(string(code))
+	handleError(err)
+}
+
+func compile(code string) error {
+	compiler := NewCompiler(code)
+	instructions := compiler.Compile()
+
+	m := NewMachine(instructions, os.Stdin, os.Stdout)
+	return m.Execute()
+}
+
+func getFileName() string {
 	flag.Parse()
 	args := flag.Args()
 
@@ -16,16 +33,7 @@ func main() {
 		handleError(errors.New("no filename given"))
 	}
 
-	fileName := args[0]
-	code, err := ioutil.ReadFile(fileName)
-	handleError(err)
-
-	compiler := NewCompiler(string(code))
-	instructions := compiler.Compile()
-
-	m := NewMachine(instructions, os.Stdin, os.Stdout)
-	err = m.Execute()
-	handleError(err)
+	return args[0]
 }
 
 func handleError(err error) {
