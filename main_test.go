@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"io/ioutil"
 	"testing"
 )
 
@@ -19,5 +20,24 @@ func TestCompileCode(t *testing.T) {
 	output := out.String()
 	if output != "Hello World!\n" {
 		t.Errorf("output wrong. got=%q", output)
+	}
+}
+
+func BenchmarkHelloWorld(b *testing.B) {
+	file, _ := ioutil.ReadFile("samples/hello_world.b")
+	benchmarkCompileCode(b, string(file))
+}
+
+func BenchmarkMandelbrot(b *testing.B) {
+	file, _ := ioutil.ReadFile("samples/mandelbrot.b")
+	benchmarkCompileCode(b, string(file))
+}
+
+func benchmarkCompileCode(b *testing.B, code string) {
+	in := bytes.NewBufferString("")
+	out := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		compile(code, in, out)
 	}
 }
